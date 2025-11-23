@@ -1,9 +1,14 @@
-import type { NextConfig } from "next";
-
-const nextConfig: NextConfig = {
-  typescript: {
-    ignoreBuildErrors: true,
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+  reactStrictMode: true,
+  // Enable if you need image optimization
+  images: {
+    domains: [],
   },
-};
+  // Environment variables available to the browser
+  env: {
+    NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL,
+  },
+}
 
-export default nextConfig;
+module.exports = nextConfig
