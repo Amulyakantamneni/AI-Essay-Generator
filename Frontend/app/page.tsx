@@ -1,21 +1,52 @@
-// Remove this:
-// import { Sparkles, FileText, Download, Copy, CheckCircle, Zap, Brain, Search } from 'lucide-react';
+'use client';
 
-// Use emoji instead:
-// Just use text or emoji: ✨ 📝 ⬇️ 📋 ✅ ⚡ 🧠 🔍
-```
+import { useState } from 'react';
+import { Sparkles, FileText, Download, Copy, CheckCircle, Zap, Brain, Search } from 'lucide-react';
 
-And replace all `<Icon />` components with emojis or text.
+export default function EssayWriter() {
+  const [topic, setTopic] = useState('');
+  const [wordLength, setWordLength] = useState('');
+  const [includePdf, setIncludePdf] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [result, setResult] = useState<any>(null);
+  const [error, setError] = useState('');
+  const [copied, setCopied] = useState(false);
 
----
+  const API_URL = 'https://ai-essay-generator-2.onrender.com';  // ← UPDATED THIS LINE
 
-## **Option 4: Best Fix - Update Lucide AND Add .npmrc**
+  const handleGenerate = async () => {
+    if (!topic.trim()) {
+      alert('Please enter a topic!');
+      return;
+    }
 
-### **1. Make sure `.npmrc` is in the RIGHT place:**
+    setLoading(true);
+    setError('');
+    setResult(null);
 
-**Location:** `Frontend/.npmrc` (NOT root `.npmrc`)
+    try {
+      const response = await fetch(`${API_URL}/generate-essay`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          topic: topic.trim(),
+          pdf: includePdf,
+          word_length: wordLength ? parseInt(wordLength) : null,
+        }),
+      });
 
-Content:
-```
-legacy-peer-deps=true
-auto-install-peers=true
+      if (!response.ok) {
+        throw new Error(`Error: ${response.statusText}`);
+      }
+
+      const data = await response.json();
+      setResult(data);
+    } catch (error: any) {
+      setError(error?.message || 'Failed to generate essay. Please try again.');
+      console.error('Error:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
