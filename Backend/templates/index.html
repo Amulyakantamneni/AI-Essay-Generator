@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Your AI Essay Writer by Amulya</title>
+
+    <!-- Google Font for classy serif -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: #f4ecdf; /* soft beige */
+            font-family: Arial, sans-serif;
+        }
+
+        /* HERO SECTION */
+        .hero {
+            text-align: center;
+            padding: 60px 20px 40px 20px;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .hero-bubble {
+            display: inline-block;
+            background: #d4d4e6;
+            padding: 12px 28px;
+            border-radius: 999px;
+            font-weight: 700;
+            font-size: 20px;
+            color: #000;
+            position: relative;
+            margin-bottom: 40px;
+        }
+
+        .hero-bubble::after {
+            content: "";
+            position: absolute;
+            left: 60px;
+            bottom: -14px;
+            border-width: 14px 14px 0 14px;
+            border-style: solid;
+            border-color: #d4d4e6 transparent transparent transparent;
+        }
+
+        .hero-heading {
+            font-family: "Playfair Display", serif;
+            font-size: 52px;
+            line-height: 1.1;
+            color: #174693;
+            margin: 0 0 20px 0;
+        }
+
+        .hero-subtitle {
+            font-family: "Playfair Display", serif;
+            font-size: 14px;
+            letter-spacing: 0.15em;
+            color: #45619a;
+            margin-bottom: 28px;
+        }
+
+        .support-pill {
+            display: inline-block;
+            padding: 10px 28px;
+            border-radius: 999px;
+            border: 2px solid #f28bb0;
+            color: #174693;
+            font-weight: 500;
+            font-size: 14px;
+            background: transparent;
+            margin-top: 10px;
+        }
+
+        /* ESSAY BOX */
+        .container {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            width: 600px;
+            margin: 40px auto;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        textarea {
+            width: 100%;
+            height: 80px;
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            font-size: 16px;
+            resize: none;
+        }
+
+        button {
+            background: #4263eb;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background: #2f47c1;
+        }
+
+        #result {
+            margin-top: 20px;
+            padding: 15px;
+            background: #eef;
+            border-radius: 8px;
+            display: none;
+        }
+
+        #pdf-btn {
+            margin-top: 10px;
+            background: #28a745;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- NEW HERO SECTION -->
+    <div class="hero">
+        <div class="hero-bubble">Your Essays are in my hands .</div>
+
+        <h1 class="hero-heading">
+            Your AI Essay Writer<br>
+            By Amulya<br>
+        </h1>
+
+        <p class="hero-subtitle">Multi Agent Orchestration Workflow.</p>
+
+        <div class="support-pill">Let me help you with your essays.</div>
+    </div>
+
+    <!-- ORIGINAL ESSAY GENERATOR BOX -->
+    <div class="container">
+        <h2>Essay Generator</h2>
+
+        <label>Enter a topic:</label>
+        <textarea id="topic" placeholder="e.g., Impact of AI on healthcare"></textarea>
+
+        <br>
+        <label>
+            <input type="checkbox" id="pdf"> Generate PDF
+        </label>
+
+        <br>
+        <button onclick="generateEssay()">Generate Essay</button>
+
+        <div id="loading" style="display:none; margin-top:15px;">⏳ Generating... please wait...</div>
+
+        <div id="result"></div>
+
+        <button id="pdf-btn" style="display:none;" onclick="downloadPDF()">Download PDF</button>
+    </div>
+
+    <!-- JS same as before -->
+    <script>
+        async function generateEssay() {
+            const topic = document.getElementById("topic").value;
+            const pdf = document.getElementById("pdf").checked;
+            const loading = document.getElementById("loading");
+            const resultDiv = document.getElementById("result");
+            const pdfBtn = document.getElementById("pdf-btn");
+
+            if (!topic.trim()) {
+                alert("Please enter a topic!");
+                return;
+            }
+
+            loading.style.display = "block";
+            resultDiv.style.display = "none";
+            pdfBtn.style.display = "none";
+
+            const response = await fetch("/generate-essay", {
+                method: "POST",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify({topic: topic, pdf: pdf})
+            });
+
+            const data = await response.json();
+            loading.style.display = "none";
+
+            resultDiv.innerHTML = `
+                <h3>Essay</h3>
+                <p>${data.essay.replace(/\n/g, "<br>")}</p>
+            `;
+            resultDiv.style.display = "block";
+
+            if (data.pdf_base64) {
+                window.generatedPDF = data.pdf_base64;
+                pdfBtn.style.display = "inline-block";
+            }
+        }
+
+        function downloadPDF() {
+            const link = document.createElement("a");
+            link.href = "data:application/pdf;base64," + window.generatedPDF;
+            link.download = "essay.pdf";
+            link.click();
+        }
+    </script>
+
+</body>
+</html>
