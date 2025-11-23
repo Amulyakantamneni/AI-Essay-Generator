@@ -11,7 +11,7 @@ export default function EssayWriter() {
   const [error, setError] = useState('');
   const [copied, setCopied] = useState(false);
 
-  const API_URL = 'http://localhost:8001';
+  const API_URL = 'https://ai-essay-generator.onrender.com';
 
   const handleGenerate = async () => {
     if (!topic.trim()) {
@@ -43,9 +43,10 @@ export default function EssayWriter() {
       const data = await response.json();
       setResult(data);
     } catch (err) {
-      setError(err.message || 'Failed to generate essay. Please try again.');
-      console.error('Error:', err);
-    } finally {
+  const errorMessage = err instanceof Error ? err.message : 'Failed to generate essay. Please try again.';
+  setError(errorMessage);
+  console.error('Error:', err);
+} finally {
       setLoading(false);
     }
   };
