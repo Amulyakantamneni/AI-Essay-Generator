@@ -22,17 +22,12 @@ app = FastAPI(
 # ============================================
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "https://ai-essay-generator-eight.vercel.app",
-        "https://ai-essay-generator-61h71xddw-amulyakantamnenis-projects.vercel.app",
-        "https://*.vercel.app",  # All Vercel deployments
-        "http://localhost:3000",  # Next.js local dev
-        "http://localhost:5173",  # Vite local dev
-    ],
+    allow_origins=["*"],  # allow all origins (relax later if you want)
     allow_credentials=True,
-    allow_methods=["*"],  # Allow all methods (GET, POST, etc.)
-    allow_headers=["*"],  # Allow all headers
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
+
 
 # ============================================
 # Rest of your existing code below
@@ -97,14 +92,15 @@ async def generate_essay(request: EssayRequest):
         
         # Call OpenAI API
         response = client.chat.completions.create(
-            model="gpt-4-turbo-preview",
-            messages=[
-                {"role": "system", "content": "You are an expert essay writer and researcher."},
-                {"role": "user", "content": writing_prompt}
-            ],
-            temperature=0.7,
-            max_tokens=2000
-        )
+    model="gpt-4.1-mini",
+    messages=[
+        {"role": "system", "content": "You are an expert essay writer and researcher."},
+        {"role": "user", "content": writing_prompt}
+    ],
+    temperature=0.7,
+    max_tokens=2000
+)
+
         
         essay_text = response.choices[0].message.content
         word_count = len(essay_text.split())
