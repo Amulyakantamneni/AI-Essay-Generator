@@ -1,7 +1,6 @@
 {
-  "version": 3,
-  "routes": [
-    { "src": "/(.*)", "dest": "/index.html" }
-  ],
-  "outputDirectory": "out"
+  "version": 2,
+  "env": {
+    "NEXT_PUBLIC_API_URL": "https://ai-essay-generator-2.onrender.com"
+  }
 }
