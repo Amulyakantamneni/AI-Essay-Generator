@@ -39,7 +39,7 @@ class EssayResponse(BaseModel):
 async def root():
     return {
         "message": "Backend status: Online",
-        "title": "AI Essay Writer API · Amulya",
+        "title": "AI Writer API",
         "description": "Your multi-agent essay engine is running successfully.",
         "frontend_url": "https://ai-essay-generator-eight.vercel.app",
         "endpoint": "POST /generate-essay"
