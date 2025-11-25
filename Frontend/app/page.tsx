@@ -403,8 +403,7 @@ export default function AIWritingStudio() {
             </button>
 
             <p className="mt-2 text-[0.68rem] text-slate-400">
-              Reuse the same topic with different tools and tones to show multi-format
-              output in your portfolio.
+              Built for Depth, Speed & Clarity . Fueled by Advanced Language Models
             </p>
           </div>
         </section>
@@ -522,10 +521,7 @@ export default function AIWritingStudio() {
             {/* Footer note */}
             <div className="mt-3 flex items-center justify-between text-[0.68rem] text-slate-400">
               <span>
-                Your Ideas, Enhanced by Intelligent Writing Systems
-                For Students, Professionals & Creators
-                Built for Depth, Speed & Clarity
-                Fueled by Advanced Language Models
+                Your Ideas, Enhanced by Intelligent Writing Systems. For Students, Professionals & Creators
               </span>
               <span>Model: OpenAI · gpt-4o-mini</span>
             </div>
