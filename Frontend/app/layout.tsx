@@ -10,12 +10,12 @@ const inter = Inter({
 export const metadata: Metadata = {
   title: 'AI Writer – Multi-format AI Writing Assistant',
   description: 'Generate essays, reports, summaries, explanations, audits, articles, and social posts from a single topic.',
-  metadataBase: new URL('https://ai-essay-generator-eight.vercel.app'), // 
+  metadataBase: new URL('https://ai-writer-agent.vercel.app/'), // 
   openGraph: {
-    title: 'AI Essay Writer - Amulya',
-    description: 'AI-powered essay generation tool',
+    title: 'AI Writer',
+    description: 'AI-powered multi-agent tool',
     url: '/',
-    siteName: 'AI Essay Writer',
+    siteName: 'AI Writer',
     type: 'website',
   },
 };
