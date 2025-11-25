@@ -522,7 +522,10 @@ export default function AIWritingStudio() {
             {/* Footer note */}
             <div className="mt-3 flex items-center justify-between text-[0.68rem] text-slate-400">
               <span>
-                Built by Amulya • Multi-format AI writer — great for portfolio demos.
+                Your Ideas, Enhanced by Intelligent Writing Systems
+                For Students, Professionals & Creators
+                Built for Depth, Speed & Clarity
+                Fueled by Advanced Language Models
               </span>
               <span>Model: OpenAI · gpt-4o-mini</span>
             </div>
