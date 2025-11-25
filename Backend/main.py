@@ -65,7 +65,6 @@ export default function AIWriter() {
       }
 
       const data = await response.json();
-      // Backend returns `essay` even though it's multi-format
       setOutput(data.essay);
       setWordCount(data.word_count);
       setSources(data.sources || []);
