@@ -1,9 +1,7 @@
-// Frontend/postcss.config.js
-
 /** @type {import('postcss-load-config').Config} */
-module.exports = {
+export default {
   plugins: {
-    '@tailwindcss/postcss': {},  // <-- Tailwind v4 PostCSS plugin
-    autoprefixer: {},            // optional but recommended
+    '@tailwindcss/postcss': {}, // ✅ Tailwind v4 PostCSS plugin
+    autoprefixer: {},           // optional but good to keep
   },
 };
