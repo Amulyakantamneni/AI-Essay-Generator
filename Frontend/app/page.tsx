@@ -17,7 +17,7 @@ export default function AIWriter() {
   const [length, setLength] = useState('medium');
   const [tone, setTone] = useState('academic');
   const [writingType, setWritingType] = useState<WritingType>('essay');
-  const [essay, setEssay] = useState('');
+  const [content, setContent] = useState('');
   const [wordCount, setWordCount] = useState(0);
   const [sources, setSources] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
@@ -49,14 +49,14 @@ export default function AIWriter() {
     }
   };
 
-  // Scroll to output when essay is generated
+  // Scroll to output when content is generated
   useEffect(() => {
-    if (essay && outputRef.current) {
+    if (content && outputRef.current) {
       outputRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
-  }, [essay]);
+  }, [content]);
 
-  const generateEssay = async () => {
+  const generateWriting = async () => {
     if (!topic.trim()) {
       setError('Please enter a topic');
       return;
@@ -64,7 +64,7 @@ export default function AIWriter() {
 
     setLoading(true);
     setError('');
-    setEssay('');
+    setContent('');
     setSources([]);
     setWordCount(0);
 
@@ -72,7 +72,13 @@ export default function AIWriter() {
       const response = await fetch(`${API_URL}/generate-essay`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ topic, length, tone, writing_type: writingType }),
+        // NOTE: backend expects: topic, length, tone, writing_type
+        body: JSON.stringify({
+          topic,
+          length,
+          tone,
+          writing_type: writingType,
+        }),
       });
 
       if (!response.ok) {
@@ -81,7 +87,7 @@ export default function AIWriter() {
       }
 
       const data = await response.json();
-      setEssay(data.essay);
+      setContent(data.essay);
       setWordCount(data.word_count);
       setSources(data.sources || []);
     } catch (err) {
@@ -97,16 +103,21 @@ export default function AIWriter() {
   };
 
   const copyToClipboard = () => {
-    navigator.clipboard.writeText(essay);
+    if (!content) return;
+    navigator.clipboard.writeText(content);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
 
   const downloadAsPDF = () => {
+    if (!content) return;
+
     const printWindow = window.open('', '', 'width=800,height=600');
     if (!printWindow) return;
 
-    const titleText = `${writingTypeLabel(writingType)} - ${topic || 'AI Writer Document'}`;
+    const titleText = `${writingTypeLabel(writingType)} - ${
+      topic || 'AI Writer Document'
+    }`;
 
     const htmlContent = `
       <!DOCTYPE html>
@@ -169,7 +180,7 @@ export default function AIWriter() {
           <strong>Tone:</strong> ${tone} |
           <strong>Type:</strong> ${writingTypeLabel(writingType)}
         </div>
-        <div class="essay-content">${essay}</div>
+        <div class="essay-content">${content}</div>
         ${
           sources.length > 0
             ? `
@@ -196,8 +207,10 @@ export default function AIWriter() {
   };
 
   const downloadAsText = () => {
+    if (!content) return;
+
     const titlePrefix = writingTypeLabel(writingType).toLowerCase().replace(' ', '-');
-    const file = new Blob([essay], { type: 'text/plain' });
+    const file = new Blob([content], { type: 'text/plain' });
     const element = document.createElement('a');
     element.href = URL.createObjectURL(file);
     element.download = `${titlePrefix}-${topic.substring(0, 20) || 'ai-writer'}.txt`;
@@ -237,9 +250,7 @@ export default function AIWriter() {
 
           {/* Topic Input */}
           <div className="space-y-2 mb-6">
-            <label className="block text-sm font-semibold text-gray-700">
-              Topic
-            </label>
+            <label className="block text-sm font-semibold text-gray-700">Topic</label>
             <textarea
               value={topic}
               onChange={(e) => setTopic(e.target.value)}
@@ -345,7 +356,7 @@ export default function AIWriter() {
 
           {/* Generate Button */}
           <button
-            onClick={generateEssay}
+            onClick={generateWriting}
             disabled={loading}
             className="w-full bg-gradient-to-r from-blue-600 to-blue-800 text-white py-4 px-6 rounded-xl font-semibold hover:from-blue-700 hover:to-blue-900 transition-all shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
           >
@@ -380,7 +391,7 @@ export default function AIWriter() {
         </div>
 
         {/* Output Section */}
-        {essay && (
+        {content && (
           <div ref={outputRef} className="space-y-6 scroll-mt-8">
             {/* Output */}
             <div className="bg-white rounded-2xl shadow-xl border border-blue-100 p-8">
@@ -430,7 +441,7 @@ export default function AIWriter() {
 
               <div className="prose prose-lg max-w-none">
                 <div className="whitespace-pre-wrap text-gray-800 leading-relaxed">
-                  {essay}
+                  {content}
                 </div>
               </div>
             </div>
